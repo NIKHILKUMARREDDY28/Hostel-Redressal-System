@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "hostelsystem"
+version = "0.1.0"
+description = ""
+authors = ["Nikhitha <r190827@rguktrkv.ac.in>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+loguru = "^0.7.2"
+motor = "^3.4.0"
+fastapi = {extras = ["all"], version = "^0.110.0"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
