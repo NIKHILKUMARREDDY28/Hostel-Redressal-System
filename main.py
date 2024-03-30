@@ -1,7 +1,7 @@
-from fastapi import FastAPI, Request, Depends, HTTPException, status, Form, UploadFile, File, Body
+from fastapi import FastAPI, Request, Depends, HTTPException, status, Form, UploadFile, File, Body, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, HTMLResponse
 from pydantic import BaseModel
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
@@ -27,6 +27,49 @@ app.add_middleware(SessionMiddleware, secret_key=SECRET_KEY)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
+def flash(response: Response, message: str, category: str = 'message'):
+    """
+    Store a flash message in cookies. For demonstration purposes only.
+    In production, consider using a more secure storage method.
+    """
+    messages = json.dumps({'category': category, 'message': message})
+    response.set_cookie(key="flash_messages", value=messages, httponly=True)
+
+def get_flashed_messages(request: Request):
+    """
+    Retrieve flash messages from cookies. For demonstration purposes only.
+    In production, consider using a more secure storage method.
+    """
+    messages = request.cookies.get("flash_messages", None)
+    if messages:
+        try:
+            messages = json.loads(messages)
+            return [messages]  # Return as a list for compatibility
+        except json.JSONDecodeError:
+            pass
+    return []
+
+@app.get("/example", response_class=HTMLResponse)
+async def example(request: Request, response: Response):
+    """
+    Example endpoint that flashes a message and redirects to the main page.
+    """
+    flash(response, "This is a test flash message.", "success")
+    # Simulate a redirect to the main page
+    return "Message flashed. <a href='/'>Go to the main page</a> to see it."
+
+@app.get("/", response_class=HTMLResponse)
+async def main(request: Request, response: Response):
+    """
+    Main page that displays flashed messages, if any.
+    """
+    # Retrieve flash messages
+    messages = get_flashed_messages(request)
+    response.delete_cookie("flash_messages")  # Clear the flash cookie
+    # Simulate rendering a template with messages
+    if messages:
+        return f"Flash message: {messages[0]['message']} with category: {messages[0]['category']}"
+    return "No flash messages."
 
 @app.get("/home")
 async def index(request: Request):
@@ -193,10 +236,10 @@ async def delete_issue(request: Request, idx: str):
 
 @app.get("/myissues")
 async def my_issues(request: Request):
-    if not request.session.get('name'):
-        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
-    infos = list(issues.find({'name': request.session.get('name'), 'email': request.session.get('email')}))
-    return templates.TemplateResponse("myissues.html", {"request": request, "infos": infos})
+    # if not request.session.get('name'):
+    #     return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+    # infos = list(issues.find({'name': request.session.get('name'), 'email': request.session.get('email')}))
+    return templates.TemplateResponse("myissues.html", {"request": request})
 
 
 @app.get("/issues/{idx}/messages")

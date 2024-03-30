@@ -1,52 +1,48 @@
-{% extends 'base.html' %}
-
-{% block head%}
-<title>My Issues</title>
-<link rel="stylesheet" href="static\css\issuess.css">
-{% endblock %}
-
-{% block body %}
-    {% with messages = get_flashed_messages(with_categories = true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{category}}">
-                    <p>
-                        <b>
-                        {{message}}
-                        </b>
-                    </p>
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
-<div style="margin:1% auto;">
-    <div class="container" >
-    </br>
-    
-{% for info in infos %}
-    <div class="card issueitem">
-        <div class="row no-gutters">
-            <div class="col-sm-3" style="background: #868e96;">
-                <img src="data:image/png;base64,{{info['imagedata']}}" class="card-img-top h-100 issueimage" alt="...">
-            </div>
-            <div class="col-sm-7">
-                <div class="card-body">
-                    <h5 class="card-title">Title: {{info['title']}}</h5>
-                    <p class="card-text">Details: {{info['details']}}</p>
-                    <p class="card-text">Location: {{info['location']}}</p>
-                    <p class="card-text">Date and Time: {{info['date']}}</p>
-                    <a href="/issues/{{info['_id']}}/messages" class="btn btn-primary btn-sm ">View Messages</a>
-                    <a href="/editissue/{{info['_id']}}" class="btn btn-primary btn-sm ">Edit</a>
-                    <a href="/deleteissue/{{info['_id']}}" class="btn btn-danger btn-sm ">Delete</a>
-                </div>
-            </div>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grievance Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Hostel Grievance Page</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Grievance</th>
+                    <th>Grievance Type</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Grievance At</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>001</td>
+                    <td>Infrastructure</td>
+                    <td>Broken chair in Room 101</td>
+                    <td>Pending</td>
+                    <td>Hostel Warden</td>
+                </tr>
+                <tr>
+                    <td>002</td>
+                    <td>Hygiene</td>
+                    <td>Unclean bathroom in the second floor</td>
+                    <td>In Progress</td>
+                    <td>Maintenance Department</td>
+                </tr>
+                <tr>
+                    <td>003</td>
+                    <td>Food Quality</td>
+                    <td>Improper food quality in the mess</td>
+                    <td>Resolved</td>
+                    <td>Mess Committee</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    </br>
-{% endfor%}    
-    </div>
-</div>
-{% endblock %}
-
-
+</body>
+</html>
