@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block head%}
+<title>Messages</title>
+{% endblock %}
+{% block body %}
+
+<div class="container" >
+    <div class="card">
+      <div class="card-header">
+        Messages
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">{{mess['title']}}</h5>
+        {% for mes in mess['messages'] %}
+          <p class="card-text">{{mes['name']}}: {{mes['comment']}}</p>
+          {% endfor %}
+        <form action="/issues/{{mess['id']}}/messages/add" method="POST">
+            <div class="form-group">
+                <label for="comment">Comment:</label>
+                <textarea class="form-control" rows="2" id="comment" name='comment'></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm">Send Message</button>
+        </form>
+      </div>
+    </div>
+</div>
+  
+{% endblock%}

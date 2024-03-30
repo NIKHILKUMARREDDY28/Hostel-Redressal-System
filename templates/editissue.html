@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block head%}
+<title>Edit Issue</title>
+{% endblock %}
+{% block body %}
+    {% with messages = get_flashed_messages(with_categories = true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{category}}">
+                <p>
+                    <b>
+                    {{message}}
+                    </b>
+                </p>
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div style="margin:auto;">
+        <h1 style="text-align: center;">Edit Issue</h1>
+        <div class="jumbotron" style="min-width: 43%; min-height: 43%;
+        margin: auto;
+        border-radius: 10px;
+        box-shadow: 10px 10px 5px grey;
+        width: 43%;
+        padding: 2%;">
+            <form method="POST" action="/editissue/{{data['_id']}}" enctype="multipart/form-data">
+                <div class="form-group">
+                <label for="Title">Title</label>
+                <input type="text" class="form-control" id="Title" required name="title" placeholder="Enter Title" value="{{data['title']}}">
+                </div>
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" class="form-control" id="location" required name="location" placeholder="Enter Location" value="{{data['location']}}">
+                </div>
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="datet" class="form-control" id="date" required name="date" placeholder="Enter Date" value="{{data['date']}}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="Details">Details</label>
+                    <textarea class="form-control" id="Details" required name="details" placeholder="Enter Details" >{{data['details']}}</textarea>
+                </div>
+                <div class="form-group">
+                    <input type="file"  id="image" required name="image" placeholder="Upload image" value="">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

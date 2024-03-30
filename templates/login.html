@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block head%}
+<title>Login</title>
+{% endblock %}
+{% block body %}
+    {% with messages = get_flashed_messages(with_categories = true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{category}}">
+                    <p>
+                        <b>
+                        {{message}}
+                        </b>
+                    </p>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div style="margin:6% auto;">
+        <h1 style="text-align: center;">Login</h1>
+        <div class="jumbotron" style="min-width: 40%; min-height: 50%;
+        margin: auto;
+        border-radius: 10px;
+        box-shadow: 10px 10px 5px grey;
+        width: 40%;
+        padding: 20px;">
+            <form method="POST" action="/login">
+
+                <div class="form-group">
+                <label for="exampleInputEmail1">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" required name="email" aria-describedby="emailHelp" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" required name="password" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

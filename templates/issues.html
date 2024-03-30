@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block head%}
+<title>All Issues</title>
+<link rel="stylesheet" href="static\css\issuess.css">
+{% endblock %}
+{% block body %}
+    {% with messages = get_flashed_messages(with_categories = true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{category}}">
+                    <p>
+                        <b>
+                        {{message}}
+                        </b>
+                    </p>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+<div style="margin:1% auto;">
+    <div class="container" >
+    </br>
+    
+{% for info in infos %}
+    <div class="card issueitem">
+        <div class="row no-gutters">
+            <div class="col-sm-3" style="background: #868e96;">
+                <img src="data:image/png;base64,{{info['imagedata']}}" class="card-img-top h-100 issueimage" alt="...">
+            </div>
+            <div class="col-sm-7">
+                <div class="card-body">
+                    <h5 class="card-title">Title: {{info['title']}}</h5>
+                    <p class="card-text">Details: {{info['details']}}</p>
+                    <p class="card-text">Location: {{info['location']}}</p>
+                    <p class="card-text">Date and Time: {{info['date']}}</p>
+                    <a href="/issues/{{info['_id']}}/messages" class="btn btn-primary btn-sm ">View Messages</a>
+                </div>
+            </div>
+            <div class="col-sm-2 voting">
+                <a href="/upvote/{{info['_id']}}">
+                    <button type="button" class="btn btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-arrow-bar-up" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 10a.5.5 0 0 0 .5-.5V3.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 3.707V9.5a.5.5 0 0 0 .5.5zm-7 2.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z"></path>
+                        </svg>
+                        <span class="visually-hidden" id="hello">
+                            {% set vote = namespace(value=0) %}
+                            {% for i in info['upvote'] %}
+                                {% if i['name'] == session.get('name') %}
+                                    {% set vote.value = vote.value + 1  %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if vote.value == 0 %}    
+                                upvote
+                            {% else %}
+                                upvoted
+                            {% endif %}
+                        </span>
+                    </button>
+                </a>
+                
+                <p class="card-text badge badge-light" width="15s" height="15" style="margin-top:1px;margin-left: 1px;">Count:{% set count = namespace(value=0) %}
+                    {% for i in info['upvote'] %}
+                            {% set count.value = count.value + 1  %}
+                    {% endfor %}
+                    {{count.value}}
+                </p>
+                {% if session.get('name')=='admin' and session.get('email')=='admin@admin.com'%}
+                    <p class="card-text">
+                        <form action="/issues/{{info['_id']}}/updatestatus" method="POST">
+                        <select class="custom-select my-1 btn btn-sm"  name="status">
+                          <option selected>{{info['status']}}</option>
+                          <option value="open">Open</option>
+                          <option value="No action taken">No action taken</option>
+                          <option value="Submitted to newspapaer">Submitted to newspapaer</option>
+                          <option value="Resolved">Resolved</option>
+                        </select>
+                        <button type="submit" class="btn btn-info btn-sm">Status Update</button>
+                        </form>                      
+                    </p>
+                    {% else %}
+                    <p class="card-text">
+                        <button class="btn btn-info btn-sm">{{info['status']}}</button>            
+                    </p>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    </br>
+{% endfor%}    
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
